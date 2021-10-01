@@ -46,7 +46,7 @@ async def example(exampleInputs: InputModel, req: Request):
 
 async def callout(pies: float, cakes: float, revenue: float, bakery: str):
     app_sheet_id = "763b2d4c-483f-4402-95e8-e6ca570acc2b"
-    app_sheet_table = "bakeriesdata"
+    app_sheet_table = "bakeries"
     app_sheet_api = f"https://api.appsheet.com/api/v2/apps/{app_sheet_id}/tables/{app_sheet_table}/Action"
     heads = {"ApplicationAccessKey": "V2-61wJZ-XOPjD-hG4Om-nIkfD-LESYh-1Iv8P-oy0hO-iQCR4"}
     heads["Content-Type"] = "application/json"
@@ -59,15 +59,16 @@ async def callout(pies: float, cakes: float, revenue: float, bakery: str):
         "Properties": { "Locale": "en-US" },
         "Rows": [
             {
-                "Bakery Name": bakery,
-                "Target revenue": revenue,
-                "Target Pies per Month": pies,
-                "Target Cakes per Month": cakes
+                "bakeryname": bakery,
+                "targetrevenue": revenue,
+                "targetpiespermonth": pies,
+                "targetcakespermonth": cakes
             }
         ]
     }
 
     async with aiohttp.request(method="POST", url=app_sheet_api, json=payload, headers=heads) as resp:
         print(f"calling out to {app_sheet_api}")
-        print(await resp.text())
+        respText = await resp.text()
+        print(f"response from AppSheet: {respText}")
 
